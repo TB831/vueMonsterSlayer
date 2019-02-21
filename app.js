@@ -3,7 +3,8 @@ new Vue({
     data: {
         playerHealth: 100,
         monsterHealth: 100,
-        gameIsRunning: false
+        gameIsRunning: false,
+        turns: [],
     },
     methods: {
         startGame: function() { // Method for starting game
@@ -13,15 +14,17 @@ new Vue({
         },
         attack: function() {    // Method for attacking
             const playerDamage = this.calculateDamage(3, 10);    // Player has lower dmg
-            const monsterDamage = this.calculateDamage(5, 12);   // Monster has higher dmg
-            
+
+            this.turns.unshift({
+                isPlayer: true,
+                text: `Player hits Monster for ${playerDamage}`
+            })
             this.monsterHealth -= playerDamage;
             if (this.checkWin()) {
                 return;
             }
 
-            this.playerHealth -= monsterDamage;
-            this.checkWin();
+            this.monsterAttacks();
         },
         specialAttack: function() { // Method for special attack
             const specialDamage = this.calculateDamage(10, 20);
@@ -29,8 +32,7 @@ new Vue({
             if (this.checkWin()) {  // Check win after every special attack
                 return;
             }
-            this.playerHealth -= this.calculateDamage(5, 12);   // Monster attacks after every player turn
-            this.checkWin();
+            this.monsterAttacks();
         },
         heal: function() {  // Method for healthing player
             const heal = 10;
@@ -39,11 +41,10 @@ new Vue({
             } else {
                 this.playerHealth = 100;
             }
-            this.playerHealth -= this.calculateDamage(5, 12);   // Monster attacks after every player turn
-            this.checkWin();
+            this.monsterAttacks()
         },
         giveUp: function() {    // Method for starting new game
-
+            this.gameIsRunning = false;
         },
         calculateDamage: function(min, max) {
             return Math.max(Math.floor(Math.random() * max) + 1, min); // Generates random num between 3-10
@@ -66,5 +67,14 @@ new Vue({
             }
             return false;
         },
+        monsterAttacks: function() {
+            const monsterDamage = this.calculateDamage(5, 12);   // Monster has higher dmg
+            this.playerHealth -= monsterDamage;
+            this.checkWin()
+            this.turns.unshift({
+                isPlayer: false,
+                text: `Monster hits Player for ${monsterDamage}`
+            });
+        }
     }
 });
