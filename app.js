@@ -29,11 +29,18 @@ new Vue({
             if (this.checkWin()) {  // Check win after every special attack
                 return;
             }
-            this.playerHealth -= this.calculateDamage(5, 12);   // Monster attacks after every player attack
+            this.playerHealth -= this.calculateDamage(5, 12);   // Monster attacks after every player turn
             this.checkWin();
         },
         heal: function() {  // Method for healthing player
-
+            const heal = 10;
+            if (this.playerHealth <= 90) {
+                this.playerHealth += heal;
+            } else {
+                this.playerHealth = 100;
+            }
+            this.playerHealth -= this.calculateDamage(5, 12);   // Monster attacks after every player turn
+            this.checkWin();
         },
         giveUp: function() {    // Method for starting new game
 
