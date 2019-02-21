@@ -12,27 +12,20 @@ new Vue({
             this.monsterHealth = 100;
         },
         attack: function() {    // Method for attacking
-            let max = 10;
-            let min = 3;
-            let damage = Math.max(Math.floor(Math.random() * max) + 1, min); // Generates random num between 3-10
-            this.monsterHealth -= damage;
-
-            if (this.monsterHealth <= 0) {
-                alert('You Won!');
-                this.gameIsRunning = false;
+            let playerDamage = this.calculateDamage(3, 10);    // Player has lower dmg
+            let monsterDamage = this.calculateDamage(5, 12);   // Monster has higher dmg
+            
+            this.monsterHealth -= playerDamage;
+            if (this.checkWin()) {
                 return;
             }
 
-            max = 12;
-            min = 5;
-            damage = Math.max(Math.floor(Math.random() * max) + 1, min);
-            this.playerHealth -= damage;
-
+            this.playerHealth -= monsterDamage;
             if (this.playerHealth <= 0) {
                 alert('You Lost!');
                 this.gameIsRunning = false;
-                return;
             }
+            this.checkWin();
         },
         specialAttack: function() { // Method for special attack
 
@@ -42,6 +35,27 @@ new Vue({
         },
         giveUp: function() {    // Method for starting new game
 
+        },
+        calculateDamage: function(min, max) {
+            return Math.max(Math.floor(Math.random() * max) + 1, min); // Generates random num between 3-10
+        },
+        checkWin: function() {
+            if (this.monsterHealth <= 0) {
+                if (confirm('You won! New game?')) {
+                    this.startGame();
+                } else {
+                    this.gameIsRunning = false;
+                }
+                return true;
+            } else if (this.playerHealth <= 0) {
+                if (confirm('You lost! New game?')) {
+                    this.startGame();
+                } else {
+                    this.gameIsRunning = false;
+                }
+                return true;
+            }
+            return false;
         },
     }
 });
