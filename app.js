@@ -12,8 +12,8 @@ new Vue({
             this.monsterHealth = 100;
         },
         attack: function() {    // Method for attacking
-            let playerDamage = this.calculateDamage(3, 10);    // Player has lower dmg
-            let monsterDamage = this.calculateDamage(5, 12);   // Monster has higher dmg
+            const playerDamage = this.calculateDamage(3, 10);    // Player has lower dmg
+            const monsterDamage = this.calculateDamage(5, 12);   // Monster has higher dmg
             
             this.monsterHealth -= playerDamage;
             if (this.checkWin()) {
@@ -21,14 +21,16 @@ new Vue({
             }
 
             this.playerHealth -= monsterDamage;
-            if (this.playerHealth <= 0) {
-                alert('You Lost!');
-                this.gameIsRunning = false;
-            }
             this.checkWin();
         },
         specialAttack: function() { // Method for special attack
-
+            const specialDamage = this.calculateDamage(10, 20);
+            this.monsterHealth -= specialDamage;
+            if (this.checkWin()) {  // Check win after every special attack
+                return;
+            }
+            this.playerHealth -= this.calculateDamage(5, 12);   // Monster attacks after every player attack
+            this.checkWin();
         },
         heal: function() {  // Method for healthing player
 
