@@ -11,6 +11,7 @@ new Vue({
             this.gameIsRunning = true;
             this.playerHealth = 100;
             this.monsterHealth = 100;
+            this.turns = [];
         },
         attack: function() {    // Method for attacking
             const playerDamage = this.calculateDamage(3, 10);    // Player has lower dmg
@@ -18,7 +19,7 @@ new Vue({
             this.turns.unshift({
                 isPlayer: true,
                 text: `Player hits Monster for ${playerDamage}`
-            })
+            });
             this.monsterHealth -= playerDamage;
             if (this.checkWin()) {
                 return;
@@ -29,6 +30,10 @@ new Vue({
         specialAttack: function() { // Method for special attack
             const specialDamage = this.calculateDamage(10, 20);
             this.monsterHealth -= specialDamage;
+            this.turns.unshift({
+                isPlayer: true,
+                text: `Player hits Monster with special for ${specialDamage}`
+            });
             if (this.checkWin()) {  // Check win after every special attack
                 return;
             }
@@ -41,7 +46,11 @@ new Vue({
             } else {
                 this.playerHealth = 100;
             }
-            this.monsterAttacks()
+            this.turns.unshift({
+                isPlayer: true,
+                text: `Player heals for ${heal}`
+            });
+            this.monsterAttacks();
         },
         giveUp: function() {    // Method for starting new game
             this.gameIsRunning = false;
